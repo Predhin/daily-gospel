@@ -1,0 +1,8 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#fbbf24" rx="64"/>
+  <!-- Book -->
+  <rect x="96" y="96" width="320" height="320" fill="white" rx="16"/>
+  <!-- Cross -->
+  <path d="M256 176v160M176 256h160" stroke="#fbbf24" stroke-width="32" stroke-linecap="round"/>
+</svg>

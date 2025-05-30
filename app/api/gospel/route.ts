@@ -15,26 +15,49 @@ export async function GET(request: Request) {
     if (!gospel) {
       return NextResponse.json({ text: "No gospel for this day." });
     }
-    return NextResponse.json({ text: gospel.text });
+    return NextResponse.json(gospel);
   } catch {
     return NextResponse.json({ error: "Database error" }, { status: 500 });
   }
 }
 
-// POST /api/gospel { date, text }
+// POST /api/gospel { date, text, imageData }
 export async function POST(request: Request) {
-  const body = await request.json();
-  if (!body.date || !body.text) {
-    return NextResponse.json({ error: "Missing date or text" }, { status: 400 });
-  }
   try {
+    const formData = await request.formData();
+    const date = formData.get("date") as string;
+    const text = formData.get("text") as string;
+    const image = formData.get("image") as File | null;
+
+    if (!date) {
+      return NextResponse.json({ error: "Missing date" }, { status: 400 });
+    }
+
+    if (!text && !image) {
+      return NextResponse.json({ error: "Missing both text and image" }, { status: 400 });
+    }
+
+    let imageData = null;
+    if (image) {
+      const bytes = await image.arrayBuffer();
+      imageData = Buffer.from(bytes).toString('base64');
+    }
+
     const client = await clientPromise;
     const db = client.db("gospel-app");
+    
     await db.collection("gospels").updateOne(
-      { date: body.date },
-      { $set: { text: body.text } },
+      { date },
+      { 
+        $set: { 
+          text: text || null,
+          imageData: imageData || null,
+          contentType: image ? image.type : null
+        } 
+      },
       { upsert: true }
     );
+
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Database error" }, { status: 500 });
