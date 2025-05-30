@@ -2,6 +2,26 @@
 
 import { useEffect, useState } from "react";
 
+// Schema.org structured data for the gospel reading
+function GospelSchema({ date, text }: { date: string; text: string }) {
+	return (
+		<script
+			type="application/ld+json"
+			dangerouslySetInnerHTML={{
+				__html: JSON.stringify({
+					"@context": "https://schema.org",
+					"@type": "Article",
+					"headline": `Daily Gospel Reading - ${new Date(date).toLocaleDateString()}`,
+					"datePublished": date,
+					"description": text.substring(0, 150) + "...",
+					"articleBody": text,
+					"articleSection": "Gospel Reading",
+				}),
+			}}
+		/>
+	);
+}
+
 function getTodayISO() {
 	return new Date().toISOString().slice(0, 10);
 }
@@ -39,33 +59,42 @@ export default function Home() {
 	const showAdminLink = urlParams?.get("mode") === "admin";
 
 	return (
-		<div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 p-4">
-			<div className="flex items-center gap-4 mb-8">
-				<button
-					aria-label="Previous day"
-					className="text-2xl px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
-					onClick={() => changeDate(-1)}
-				>
-					←
-				</button>
-				<span className="text-xl font-semibold">
-					{new Date(selectedDate).toLocaleDateString(undefined, {
-						year: "numeric",
-						month: "long",
-						day: "numeric",
-					})}
-				</span>
-				<button
-					aria-label="Next day"
-					className="text-2xl px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40"
-					onClick={() => changeDate(1)}
-					disabled={selectedDate === today}
-				>
-					→
-				</button>
-			</div>
+		<main className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 p-4">
+			<GospelSchema date={selectedDate} text={gospel} />
+			
+			<header className="w-full max-w-4xl mx-auto mb-8">
+				<h1 className="text-3xl font-bold text-center mb-4">Daily Gospel Reading</h1>
+				<nav className="flex items-center justify-center gap-4" aria-label="Date navigation">
+					<button
+						aria-label="Previous day"
+						className="text-2xl px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+						onClick={() => changeDate(-1)}
+					>
+						←
+					</button>
+					<time 
+						dateTime={selectedDate}
+						className="text-xl font-semibold"
+					>
+						{new Date(selectedDate).toLocaleDateString(undefined, {
+							year: "numeric",
+							month: "long",
+							day: "numeric",
+						})}
+					</time>
+					<button
+						aria-label="Next day"
+						className="text-2xl px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40"
+						onClick={() => changeDate(1)}
+						disabled={selectedDate === today}
+					>
+						→
+					</button>
+				</nav>
+			</header>
+
 			{/* Simple animation placeholder */}
-			<div className="mb-8 animate-bounce">
+			<div className="mb-8 animate-bounce" aria-hidden="true">
 				<svg
 					width="48"
 					height="48"
@@ -75,12 +104,30 @@ export default function Home() {
 					<circle cx="12" cy="12" r="10" fill="#fbbf24" />
 				</svg>
 			</div>
-			<div className="max-w-xl text-center text-2xl font-serif bg-yellow-50 dark:bg-yellow-900 dark:text-yellow-100 p-8 rounded shadow min-h-[120px] flex items-center justify-center">
-				{loading ? "Loading..." : gospel}
-			</div>
+
+			<article className="max-w-xl w-full">
+				{loading ? (
+					<div className="text-center p-8" role="status">
+						<span className="sr-only">Loading...</span>
+						Loading...
+					</div>
+				) : (
+					<div className="prose prose-lg dark:prose-invert mx-auto bg-yellow-50 dark:bg-yellow-900 dark:text-yellow-100 p-8 rounded shadow">
+						{gospel}
+					</div>
+				)}
+			</article>
+
+			{/* Admin link visible only with mode=admin query parameter */}
 			{showAdminLink && (
-				<a href="/admin-upload" className="fixed top-4 right-4 bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded shadow">Admin Upload</a>
+				<a 
+					href="/admin-upload" 
+					className="fixed top-4 right-4 bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded shadow"
+					aria-label="Go to admin upload page"
+				>
+					Admin Upload
+				</a>
 			)}
-		</div>
+		</main>
 	);
 }
