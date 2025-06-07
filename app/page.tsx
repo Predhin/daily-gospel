@@ -58,7 +58,6 @@ async function fetchGospel(date: string): Promise<GospelContent> {
 }
 
 export default function Home() {
-   const [visitorId, setVisitorId] = useState<string | null>(null);
    const [trusted, setTrusted] = useState(false);
    const router = useRouter();
    const [currentPath, setCurrentPath] = useState('/');
@@ -76,7 +75,6 @@ export default function Home() {
 		async function checkTrust() {
 			const fpAgent = await FingerprintJS.load();
 			const { visitorId } = await fpAgent.get();
-			setVisitorId(visitorId);
 			try {
 				const res = await fetch(`/api/check-trusted?fp=${visitorId}`);
 				const data = await res.json();
@@ -186,11 +184,6 @@ export default function Home() {
 
 	return (
 		<>
-			{visitorId && (
-				<div className="fixed bottom-4 left-4 bg-yellow-100 text-black p-2 rounded">
-					Your visitor ID: <code>{visitorId}</code>
-				</div>
-			)}
 			{navSection}
 			<main className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 p-4">
 				<GospelSchema date={selectedDate} text={gospel.text || ""} />
