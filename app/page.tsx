@@ -70,7 +70,7 @@ export default function Home() {
 		setCurrentPath(window.location.pathname);
 	}, []);
 
-	// Auto-redirect trusted PWA installer to admin-upload
+	// Check if device is trusted (but don't auto-redirect)
 	useEffect(() => {
 		async function checkTrust() {
 			const fpAgent = await FingerprintJS.load();
@@ -80,17 +80,13 @@ export default function Home() {
 				const data = await res.json();
 				if (res.ok && data.trusted) {
 					setTrusted(true);
-					// respect skipRedirect flag
-					const params = new URLSearchParams(window.location.search);
-					if (params.get('skipRedirect') === 'true') return;
-					router.replace('/admin-upload');
 				}
 			} catch {
 				// ignore errors
 			}
 		}
 		checkTrust();
-	}, [router]);
+	}, []);
 
 	useEffect(() => {
 		// Check for date parameter in URL on mount

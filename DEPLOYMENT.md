@@ -57,8 +57,8 @@ vercel --prod
 ## Usage Workflows
 
 ### Admin Upload Workflow
-1. PWA install redirects trusted devices to `/admin-upload`
-2. Auto-authentication via fingerprint check
+1. PWA install shows dashboard with Admin button for trusted devices  
+2. Auto-authentication via fingerprint check (no password needed)
 3. Upload text and/or image for specific date
 4. Redirect to dashboard showing uploaded content
 
@@ -86,7 +86,7 @@ Response: { success: true } or { error: string }
 ```
 
 ### PWA Manifest
-- `start_url: "/admin-upload"` for trusted device direct access
+- `start_url: "/"` - Opens to dashboard with Admin button for trusted devices
 - Standalone display mode
 - Custom icons and theme colors
 

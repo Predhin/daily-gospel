@@ -2,7 +2,7 @@
   "name": "Daily Gospel",
   "short_name": "Daily Gospel",
   "description": "Daily scripture readings and spiritual reflections",
-  "start_url": "/admin-upload",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#fbbf24",

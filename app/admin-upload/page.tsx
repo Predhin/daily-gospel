@@ -243,9 +243,8 @@ export default function AdminGospelUpload() {
                }}
                className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold py-2 px-4 rounded text-sm"
              >
-               Choose Image
-             </button>
-             <button
+               📁 Choose from Gallery
+             </button>             <button
                type="button"
                onClick={() => {
                  if (fileInputRef.current) {
@@ -255,7 +254,7 @@ export default function AdminGospelUpload() {
                }}
                className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold py-2 px-4 rounded text-sm"
              >
-               Take Photo
+               📷 Take Photo
              </button>
              <button
                type="button"
