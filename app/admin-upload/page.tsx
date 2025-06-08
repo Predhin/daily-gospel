@@ -213,15 +213,13 @@ export default function AdminGospelUpload() {
                <li>Paste a screenshot (on desktop)</li>
              </ul>
            </span>
-         </label>
-         <div className="space-y-4">
+         </label>         <div className="space-y-4">
            <input
              type="file"
              accept="image/*"
              onChange={handleImageChange}
              ref={fileInputRef}
              className="p-2 rounded border w-full text-sm"
-             capture="environment"
              onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
                const items = e.clipboardData?.items;
                const imageItem = Array.from(items).find(item => item.type.startsWith("image/"));
@@ -235,10 +233,14 @@ export default function AdminGospelUpload() {
                  }
                }
              }}
-           />          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-             <button
+           />          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">             <button
                type="button"
-               onClick={() => fileInputRef.current?.click()}
+               onClick={() => {
+                 if (fileInputRef.current) {
+                   fileInputRef.current.removeAttribute("capture");
+                   fileInputRef.current.click();
+                 }
+               }}
                className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold py-2 px-4 rounded text-sm"
              >
                Choose Image
